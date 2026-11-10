@@ -1,0 +1,67 @@
+@model IEnumerable<day3.Models.Category>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["IdSortParam"]">
+                    @Html.DisplayNameFor(model => model.Id)
+                </a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParam"]">
+                    @Html.DisplayNameFor(model => model.Name)
+                </a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+                <td>
+                    @Html.DisplayFor(model => item.Id)
+                </td>
+            <td>
+                @Html.DisplayFor(model => item.Name)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+@{
+    var currentPage = (int)ViewData["PageNumber"]!;
+    var totalPages = (int)ViewData["TotalPages"]!;
+    var sortOrder = ViewData["CurrentSort"]?.ToString() ?? string.Empty;
+}
+<nav aria-label="Category pages">
+    <ul class="pagination">
+        <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+            <a class="page-link" asp-action="Index" asp-route-sortOrder="@sortOrder" asp-route-pageNumber="@(currentPage - 1)">Previous</a>
+        </li>
+        @for (var pageIndex = 1; pageIndex <= totalPages; pageIndex++)
+        {
+            <li class="page-item @(pageIndex == currentPage ? "active" : "")">
+                <a class="page-link" asp-action="Index" asp-route-sortOrder="@sortOrder" asp-route-pageNumber="@pageIndex">@pageIndex</a>
+            </li>
+        }
+        <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+            <a class="page-link" asp-action="Index" asp-route-sortOrder="@sortOrder" asp-route-pageNumber="@(currentPage + 1)">Next</a>
+        </li>
+    </ul>
+</nav>
